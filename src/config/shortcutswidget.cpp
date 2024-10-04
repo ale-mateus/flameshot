@@ -103,18 +103,18 @@ void ShortcutsWidget::populateInfoTable()
 
         if (identifier.isEmpty()) {
             QFont font;
-            font.setBold(true);
+            font.setBold(false);
             item->setFont(font);
             item->setFlags(item->flags() ^ Qt::ItemIsEnabled);
             m_table->item(i, 1)->setFont(font);
         }
     }
 
-    // Read-only table items
+    // Make previously Read-only table items editable by the user
     for (int x = 0; x < m_table->rowCount(); ++x) {
         for (int y = 0; y < m_table->columnCount(); ++y) {
             QTableWidgetItem* item = m_table->item(x, y);
-            item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+            item->setFlags(Qt::ItemIsEditable);
         }
     }
 }
@@ -122,11 +122,6 @@ void ShortcutsWidget::populateInfoTable()
 void ShortcutsWidget::onShortcutCellClicked(int row, int col)
 {
     if (col == 1) {
-        // Ignore non-changable shortcuts
-        if (Qt::ItemIsEnabled !=
-            (Qt::ItemIsEnabled & m_table->item(row, col)->flags())) {
-            return;
-        }
 
         QString shortcutName = m_shortcuts.at(row).at(0);
         auto* setShortcutDialog = new SetShortcutDialog(nullptr, shortcutName);
